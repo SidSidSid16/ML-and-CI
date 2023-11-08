@@ -16,16 +16,9 @@ dt = 1;         % Time step
 RmI = 0.8;      % Input condition
 V = 0;          % Output voltage
 
-
-
 % Forward Euler
 
-for t = 2:tl
-    V(t) = V(t-1) * (1 - (dt/tc)) + (dt * ((El + RmI)/ tc));
-    if (V(t) >= Vth)
-        V(t) = El;
-    end
-end
+V = forwardEulerLIF(dt, tc, tl, El, RmI, Vth);
 
 nexttile;
 plot(V, 'LineWidth', 1)
@@ -38,13 +31,7 @@ xlabel("Time / (ms)");
 % Changing RmI to 1.2
 
 RmI = 1.2;
-
-for t = 2:tl
-    V(t) = V(t-1) * (1 - (dt/tc)) + (dt * ((El + RmI)/ tc));
-    if (V(t) >= Vth)
-        V(t) = El;
-    end
-end
+V = forwardEulerLIF(dt, tc, tl, El, RmI, Vth);
 
 nexttile;
 plot(V, 'LineWidth', 1)
@@ -60,13 +47,7 @@ xlabel("Time / (ms)");
 
 % Reset RmI to 0.8
 RmI = 0.8;
-
-for t = 2:tl
-    V(t) = (V(t-1) + (dt * ( (El + RmI)/ tc))) / (1 + (dt * (1/tc)));
-    if (V(t) >= Vth)
-        V(t) = El;
-    end
-end
+backwardEulerLIF(dt, tc, tl, El, RmI, Vth);
 
 nexttile;
 plot(V, 'LineWidth', 1)
@@ -79,13 +60,7 @@ xlabel("Time / (ms)");
 
 % Change RmI to 1.2
 RmI = 1.2;
-
-for t = 2:tl
-    V(t) = (V(t-1) + (dt * ( (El + RmI)/ tc))) / (1 + (dt * (1/tc)));
-    if (V(t) >= Vth)
-        V(t) = El;
-    end
-end
+backwardEulerLIF(dt, tc, tl, El, RmI, Vth);
 
 nexttile;
 plot(V, 'LineWidth', 1)
@@ -94,3 +69,23 @@ ylim([0 1])
 title('Backwards Euler, RmI = 0.8');
 ylabel("Amplitude / (V)");
 xlabel("Time / (ms)");
+
+function V = forwardEulerLIF(dt, tc, tl, El, RmI, Vth)
+    V = zeros(1, tl);
+    for t = 2:tl
+        V(t) = V(t-1) * (1 - (dt/tc)) + (dt * ((El + RmI)/ tc));
+        if (V(t) >= Vth)
+            V(t) = El;
+        end
+    end
+end
+
+function V = backwardEulerLIF(dt, tc, tl, El, RmI, Vth)
+    V = zeros(1, tl);
+    for t = 2:tl
+        V(t) = (V(t-1) + (dt * ( (El + RmI)/ tc))) / (1 + (dt * (1/tc)));
+        if (V(t) >= Vth)
+            V(t) = El;
+        end
+    end
+end
