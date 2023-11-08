@@ -14,7 +14,6 @@ R = 1;          % Input resistance (1 Ohm)
 tl = 250;       % Time limit
 dt = 1;         % Time step
 RmI = 0.8;      % Input condition
-V = 0;          % Output voltage
 
 % Forward Euler
 
